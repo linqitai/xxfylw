@@ -22,7 +22,7 @@ export const addBlacklist4WebUrl = host_test + '/api/blacklistInf/addInf4Web';
 export const editBlacklist4WebUrl = host_test + '/api/blacklistInf/editInf';
 export const haveThisModelUrl = host_test + '/api/blacklistInf/haveThisModel';
 export const haveThisModel4EditUrl = host_test + '/api/blacklistInf/haveThisModel4Edit';
-
+export const getBlacklistAllUrl = host_test + '/api/blacklistInf/getListAll';
 
 // 律师表
 export const deleteLawyerInfByIdUrl = host_test + '/api/lawyerInf/deleteInfById';

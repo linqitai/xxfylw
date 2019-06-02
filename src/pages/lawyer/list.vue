@@ -1,15 +1,5 @@
 <style lang="scss" scoped>
-.inputFileBox{
-  position: relative;
-  .inputFile{
-    position: absolute;
-    right: 0px;
-    top: 0px;
-    bottom: 0px;
-    width: 160px;
-    opacity: 0;
-  }
-}
+
 </style>
 <template>
   <div class="apply" ref="apply">
@@ -99,11 +89,10 @@
         <div class="right inputFileBox margL20">
           <el-button icon="el-icon-download" type="primary" size="medium" @click="exportToExcel">导出到Excel</el-button>
         </div>
-        <div class="right inputFileBox">
-          <!-- <input type="file" ref="upload" accept=".xls,.xlsx" class="inputFile"> -->
-          <!-- <input id="upload" type="file" @change="importfxx(this)"  accept=".csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"/> -->
+        <!-- <div class="right inputFileBox">
+          <input type="file" ref="upload" accept=".xls,.xlsx" class="inputFile">
           <el-button icon="el-icon-circle-plus" type="primary" size="medium">从Excel导入数据</el-button>
-        </div>
+        </div> -->
       </div>
 
       <el-dialog title="详情" width="1000px" :visible.sync="dialogDetailFormVisible">
@@ -314,13 +303,13 @@ export default {
       var that = this;
       require.ensure([], () => {
           const { export_json_to_excel } = require('../../excel/Export2Excel'); //这里必须使用绝对路径
-          const tHeader = ['编号','姓名', '性别', '身份证号','执业机构','执业证类别','执业证号','律师资格证号','发证机关','发证日期','登记时间','数据来自']; // 导出的表头名
-          const filterVal = ['LId','LName', 'Sex', 'LIdentityNumber','LActuator','LPCType','LPCNumber','LQualifityNumber','LIssuingAuthority','LInTime','LIssuingDate','CName']; // 导出的表头字段名
+          const tHeader = ['编号','姓名', '性别', '身份证号','执业机构','执业证类别','执业证号','律师资格证号','发证机关','发证日期','登记时间','数据来自','备注']; // 导出的表头名
+          const filterVal = ['LId','LName', 'Sex', 'LIdentityNumber','LActuator','LPCType','LPCNumber','LQualifityNumber','LIssuingAuthority','LInTime','LIssuingDate','CName','LRemark']; // 导出的表头字段名
           const list = that.excelData;
           const data = that.formatJson(filterVal, list);
           let time = getFullDate(new Date().getTime());
           console.log('time',time);
-          export_json_to_excel(tHeader, data, `律师库excel ${time}`);// 导出的表格名称，根据需要自己命名
+          export_json_to_excel(tHeader, data, `律师库Excel ${time}`);// 导出的表格名称，根据需要自己命名
       })
     },
     formatJson(filterVal, jsonData) {

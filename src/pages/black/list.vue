@@ -82,7 +82,7 @@
       </el-table>
       <div class="tableBottom">
         <el-pagination
-          class="pagination"
+          class="pagination left"
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page.sync="pageIndex"
@@ -91,6 +91,9 @@
           layout="total, sizes, prev, pager, next, jumper"
           :total="total"
         ></el-pagination>
+        <div class="right inputFileBox margL20">
+          <el-button icon="el-icon-download" type="primary" size="medium" @click="exportToExcel">导出到Excel</el-button>
+        </div>
       </div>
       <el-dialog title="详情" width="1000px" :visible.sync="dialogDetailFormVisible">
         <div class="dialog_body">
@@ -233,8 +236,8 @@
 </template>
 <script>
 // import { ERR_OK } from '@/api/index'
-import { AESEncrypt,getFullDateTime,_md5,isNUll } from '@/common/js/utils'
-import { haveThisModelUrl,haveThisModel4EditUrl,getBlackListByMoreUrl,addBlacklist4WebUrl, getVisitorListUrl, editBlacklist4WebUrl, deleteBlacklistInfByIdUrl, ERR_OK, ajax } from "@/api/index";
+import { AESEncrypt,getFullDateTime,getFullDate,_md5,isNUll } from '@/common/js/utils'
+import { getBlacklistAllUrl,haveThisModelUrl,haveThisModel4EditUrl,getBlackListByMoreUrl,addBlacklist4WebUrl, getVisitorListUrl, editBlacklist4WebUrl, deleteBlacklistInfByIdUrl, ERR_OK, ajax } from "@/api/index";
 // import { ajax } from "@/api/ajax"
 import searchCondition from "@/components/searchCondition.vue";
 export default {
@@ -292,6 +295,44 @@ export default {
     searchCondition
   },
   methods: {
+    getAllList() {
+      let that = this;
+      var params = {};
+      // var url = getVisitorListUrl;
+      var url = getBlacklistAllUrl;
+      console.log(params, "params");
+      var method = "GET";
+      console.log("intoAjax");
+      ajax(url, method, params, function(res) {
+        var result = JSON.parse(res);
+        console.log(result);
+        console.log("code:" + result.code);
+        if (result.code == ERR_OK) {
+          that.excelData = result.data;
+          that.export2Excel()
+        }
+      });
+    },
+    // 导出数据到Excel
+    exportToExcel() {
+      this.getAllList();
+    },
+    export2Excel() {
+      var that = this;
+      require.ensure([], () => {
+          const { export_json_to_excel } = require('../../excel/Export2Excel'); //这里必须使用绝对路径
+          const tHeader = ['编号','姓名', '性别','民族','出生日期','身份证里的住址','签发机关','证件有效期','证件类型','证件号','创建时间','数据来自','级别','备注']; // 导出的表头名
+          const filterVal = ['BId','BName', 'Sex', 'BNation','BBirthDate','BAddress','BIssuingAuthority','BExpiryDate','BCertificateType','BCertificateNumber','BCreateTime','CName','BLevel','BRemark']; // 导出的表头字段名
+          const list = that.excelData;
+          const data = that.formatJson(filterVal, list);
+          let time = getFullDate(new Date().getTime());
+          console.log('time',time);
+          export_json_to_excel(tHeader, data, `黑名单库Excel ${time}`);// 导出的表格名称，根据需要自己命名
+      })
+    },
+    formatJson(filterVal, jsonData) {
+        return jsonData.map(v => filterVal.map(j => v[j]))
+    },
     getColor(type) {
       return type == "B" ? "warn_text" : type == "L" ? "green_text" : "";
     },

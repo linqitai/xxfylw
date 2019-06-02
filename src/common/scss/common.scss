@@ -54,6 +54,17 @@ $minWidth:700px;
 .dialog_input_width{
   width: 70%;
 }
+.inputFileBox{
+  position: relative;
+  .inputFile{
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    width: 160px;
+    opacity: 0;
+  }
+}
 .mask{
   position: absolute;
   left: 0;
